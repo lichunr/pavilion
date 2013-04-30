@@ -1,0 +1,19 @@
+{
+    "name": "pavilion",
+        "description": "lightweight node.js + markdown blog system using file storage",
+        "version": "0.0.1",
+        "author" : "Chun Li <me@lichun.cc>",
+        "keyword": [
+            "blog"
+        ],
+        "engines": {
+            "node": ">=0.8"
+        },
+        "dependencies" : {
+            "express" : "3.2.1",
+            "jade" : "0.30.0",
+            "stylus" : "0.32.1",
+            "markdown" : "0.4.0",
+            "markdown-meta" : "0.0.1"
+        }
+}

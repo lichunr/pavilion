@@ -32,6 +32,21 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
+app.get('/backend', function(req, res) {
+    res.render('backend/editor');
+});
+
+var marked = require( "marked" );
+var markdown_meta = require( "markdown-meta" );
+var fs = require('fs');
+
+app.get('/', function(req, res) {
+    fs.readFile('blogs/test.md', 'utf-8', function(err, data) { 
+        console.log(markdown_meta.parse(data));
+        res.render('backend/view', {content: marked(data)});
+    });
+});
+
 app.listen(1337);
 
 console.log('Server running at http://127.0.0.1:1337/');

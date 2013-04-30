@@ -1,0 +1,19 @@
+extends base
+
+block body
+    #editor.left
+        textarea(id='text-input',oninput="this.editor.update()")
+    #preview.right
+        #metadata
+        #content
+
+    script(type='text/javascript')
+        var $ = function (id) { return document.getElementById(id); };
+        function Editor(input, content) {
+            this.update = function () {
+                content.innerHTML = marked(input.value);
+            };
+            input.editor = this;
+            this.update();
+        }
+        new Editor($("text-input"), $("content"));

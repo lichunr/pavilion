@@ -32,10 +32,6 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
-app.get('/backend', function(req, res) {
-    res.render('backend/editor');
-});
-
 var marked = require( "marked" );
 var markdown_meta = require( "markdown-meta" );
 var fs = require('fs');
@@ -46,6 +42,8 @@ app.get('/', function(req, res) {
         res.render('backend/view', {content: marked(data)});
     });
 });
+
+var editorController = require('./controllers/editor')(app);
 
 app.listen(1337);
 

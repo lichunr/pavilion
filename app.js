@@ -45,6 +45,9 @@ app.get('/', function(req, res) {
 
 var editorController = require('./controllers/editor')(app);
 
+var BlogManager = require('./models/blogManager');
+var blogManager = new BlogManager();
+
 app.listen(1337);
 
 console.log('Server running at http://127.0.0.1:1337/');

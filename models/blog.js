@@ -1,41 +1,22 @@
-var Globals = require('../lib/globals.js');
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var path = require('path');
+var db = require('../lib/db');
+var markdown_meta = require('markdown-meta');
 
-var Blog = function() {
-    this.metadata = {
-        tags: [],
-        category: [], //category has level, 0 is highest
-        createTime: null,
-        updateTime: null,
-        seo : null
-    };
+var Blog = function(md) {
+    this.md = md || "";
+    this.metadata = markdown_meta.parse(md) || {};
 
-    this.get = function (path) {
-    };
-
-    this.save = function (data, next) {
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-
-        var filepath = path.dirname(Globals.BLOG_FOLDER + "/" + year + "/" + month + "/" + day);
-        var filename = this.metadata.seo + Globals.MD_EXTENSION;
-
-        mkdirp(filepath, function (err) {
-            if (err) {
-                return next(err);
-            }
-            fs.writeFile(filepath + "/" + filename, data, function(err) {
-                if (err) {
-                    return next(err);
-                }
-                next();
-            });
+    this.get = function (path, next) {
+        db.select(path, function(data) {
+            next(data);
         });
+    };
 
+    this.save = function (next) {
+        if (!this.metadata.seo) {
+            next("no_seo");
+            return;
+        }
+        db.insert(this.metadata.seo, this.md, next);
     };
 };
 

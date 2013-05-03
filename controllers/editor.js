@@ -1,5 +1,4 @@
 var Blog = require('../models/blog');
-var markdown_meta = require('markdown-meta');
 
 module.exports = function(app) {
     /* get request */
@@ -10,10 +9,8 @@ module.exports = function(app) {
     /* post&ajax request */
     app.post('/backend/add', function(req, res) {
         var md = req.body.md;
-        var metadata = markdown_meta.parse(md);
-        var blog = new Blog();
-        blog.metadata = metadata;
-        blog.save(md, function(err) {
+        var blog = new Blog(md);
+        blog.save(function(err) {
             if (err) {
                 res.send(err);
                 return;

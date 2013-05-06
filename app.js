@@ -32,6 +32,9 @@ app.configure('production', function(){
     app.use(express.errorHandler());
 });
 
+var BlogManager = require('./models/blogManager');
+var blogManager = new BlogManager();
+
 var marked = require( "marked" );
 var markdown_meta = require( "markdown-meta" );
 var fs = require('fs');
@@ -43,10 +46,8 @@ app.get('/', function(req, res) {
     });
 });
 
+var blogController = require('./controllers/blog')(app, blogManager);
 var editorController = require('./controllers/editor')(app);
-
-var BlogManager = require('./models/blogManager');
-var blogManager = new BlogManager();
 
 app.listen(1337);
 

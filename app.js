@@ -33,20 +33,9 @@ app.configure('production', function(){
 });
 
 var BlogManager = require('./models/blogManager');
-var blogManager = new BlogManager();
+new BlogManager(app);
 
-var marked = require( "marked" );
-var markdown_meta = require( "markdown-meta" );
-var fs = require('fs');
-
-app.get('/', function(req, res) {
-    fs.readFile('blogs/test.md', 'utf-8', function(err, data) { 
-        console.log(markdown_meta.parse(data));
-        res.render('backend/view', {content: marked(data)});
-    });
-});
-
-var blogController = require('./controllers/blog')(app, blogManager);
+var blogController = require('./controllers/blog')(app);
 var editorController = require('./controllers/editor')(app);
 
 app.listen(1337);

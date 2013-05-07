@@ -1,17 +1,21 @@
 var db = require('../lib/db');
 var Globals = require('../lib/globals');
+var Blog = require('./blog');
 var markdown_meta = require('markdown-meta');
 
-var BlogManager = function () {
+var BlogManager = function (app) {
     this.tags = {};
     this.categories = {};
-    this.metadatas = {};
+    this.blogs = {};
 
-    readBlogs(Globals.BLOG_FOLDER, Globals.MD_EXTENSION, function(metadatas) {
-        this.metadatas = metadatas || [];
-        console.log(this.metadatas);
-        this.tags = collectTags(this.metadatas);
-        this.categories = collectCategories(this.metadatas);
+    var that = this;
+    readBlogs(Globals.BLOG_FOLDER, Globals.MD_EXTENSION, function(blogs) {
+        that.blogs = blogs || [];
+        that.tags = collectTags(that.blogs);
+        that.categories = collectCategories(that.blogs);
+        console.log(that);
+
+        app.set('blogManager', that);
     });
 };
 
@@ -21,12 +25,12 @@ function readBlogs(folder, extension, next) {
     }, markdown_meta.parse);    
 }
 
-function collectTags(metadatas) {
+function collectTags(blogs) {
     var tags = {};
     return tags;
 }
 
-function collectCategories(metadatas) {
+function collectCategories(blogs) {
     var categories = {};
     return categories;
 }

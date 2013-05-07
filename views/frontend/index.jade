@@ -1,0 +1,6 @@
+extends base
+
+block body
+    for blog in blogs
+        h1
+            a(href='#{blog.url}') #{blog.title}

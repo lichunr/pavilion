@@ -1,22 +1,28 @@
 var db = require('../lib/db');
-var markdown_meta = require('markdown-meta');
+var marked = require('marked');
+var Utils = require('../lib/utils');
 
-var Blog = function(md) {
-    this.md = md || "";
-    this.metadata = markdown_meta.parse(md) || {};
+var Blog = function(metadata) {
+    this.seo = metadata.seo;
+    this.path = metadata.path;
+    this.title = metadata.title || metadata.seo;
+    this.tags = metadata.tags || {};
+    this.categories = metadata.categories || {};
+    this.dateTime = metadata.dateTime || new Date;
+    this.url = Utils.generateUrl(this.dateTime.getFullYear(), this.dateTime.getMonth() + 1, this.dateTime.getDate(), this.seo);
 
-    this.get = function (path, next) {
-        db.select(path, function(data) {
-            next(data);
+    this.get = function (next) {
+        db.select(this.path, function(data) {
+            next(marked(data));
         });
     };
 
-    this.save = function (next) {
-        if (!this.metadata.seo) {
+    this.save = function (md, next) {
+        if (!this.seo) {
             next("no_seo");
             return;
         }
-        db.insert(this.metadata.seo, this.md, next);
+        db.insert(this.seo, md, next);
     };
 };
 

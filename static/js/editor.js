@@ -1,4 +1,5 @@
 
+(function() {
 var metadata = null;
 function Editor(input, content) {
     this.update = function () {
@@ -10,14 +11,15 @@ function Editor(input, content) {
 }
 new Editor($("#text-input"), $("#content"));
 
-$("#createBlogBtn").on('click', function() {
+$("#saveBlogBtn").on('click', function() {
+    var mode = $("#mode").val();
     if (metadata.seo === undefined || metadata.seo.trim() === "") {
         alert("please input seo");
         return;
     }
 
     $.ajax({
-        url : "/backend/add",
+        url : "/backend/addpost",
         type: "POST",
         data: {
             md : $("#text-input").val()
@@ -26,3 +28,4 @@ $("#createBlogBtn").on('click', function() {
         }
     });
 });
+})();

@@ -1,4 +1,7 @@
 extends base
 
 block body
+    for blog in blogs
+        h1
+            a(href='backend/#{blog.url}') #{blog.title}
     

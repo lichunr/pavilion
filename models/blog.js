@@ -17,6 +17,12 @@ var Blog = function(metadata) {
         });
     };
 
+    this.getRaw = function (next) {
+        db.select(this.path, function(data) {
+            next(data);
+        });
+    };
+
     this.save = function (md, next) {
         if (!this.seo) {
             next("no_seo");

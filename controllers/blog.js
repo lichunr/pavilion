@@ -14,8 +14,12 @@ module.exports = function(app) {
     app.get('/:year/:month/:day/:seo', function(req, res) {
         var url = Utils.generateUrl(req.params.year, req.params.month, req.params.day, req.params.seo);
         var blog = getManager().getBlog(url);
-        blog.get(function(content) {
-            res.render('frontend/view', {content: content});
-        });
+        if (blog) {
+            blog.get(function(content) {
+                res.render('frontend/view', {content: content});
+            });
+        } else {
+            res.send('no_blog_found');
+        }
     });
 };

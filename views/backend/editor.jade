@@ -3,8 +3,15 @@ extends base
 block body
     #editor.left
         textarea(id='text-input',oninput="this.editor.update()")
+            - if (typeof(content) !== 'undefined')
+                != content
+        - var _mode = 'add'
+        - if (typeof(mode) !== 'undefined') {
+            _mode = mode;
+        - }
+        input(id='mode', type='hidden', value='#{_mode}')
     #preview.right
         #metadata
         #content
-        button(id='createBlogBtn') Create
+        button(id='saveBlogBtn') Save
     script(type='text/javascript', src='/js/editor.js')

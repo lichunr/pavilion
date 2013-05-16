@@ -3,13 +3,12 @@ var marked = require('marked');
 var Utils = require('../lib/utils');
 
 var Blog = function(metadata) {
-    this.seo = metadata.seo;
+    this.metadata = metadata;
     this.path = metadata.path;
-    this.title = metadata.title || metadata.seo;
-    this.tags = metadata.tags || {};
-    this.categories = metadata.categories || {};
-    this.dateTime = metadata.dateTime || new Date;
-    this.url = Utils.generateUrl(this.dateTime.getFullYear(), this.dateTime.getMonth() + 1, this.dateTime.getDate(), this.seo);
+    if (!this.metadata.dateTime) {
+        this.metadata.dateTime = new Date;
+    }
+    this.url = Utils.generateUrl(this.metadata.dateTime.getFullYear(), this.metadata.dateTime.getMonth() + 1, this.metadata.dateTime.getDate(), this.metadata.seo);
 
     this.get = function (next) {
         db.select(this.path, function(data) {
@@ -24,11 +23,18 @@ var Blog = function(metadata) {
     };
 
     this.save = function (md, next) {
-        if (!this.seo) {
+        if (!this.metadata.seo) {
             next("no_seo");
             return;
         }
-        db.insert(this.seo, md, next);
+        if (!this.metadata.title) {
+            next("no_title");
+            return;
+        }
+        if (!this.metadata.dateTime) {
+            this.metadata.dateTime = new Date;
+        }
+        db.insert(this.metadata.seo, md, next);
     };
 };
 

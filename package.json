@@ -14,7 +14,7 @@
             "jade"          : "0.30.0",
             "stylus"        : "0.32.1",
             "marked"        : "0.2.8",
-            "markdown-meta" : "0.0.1",
+            "markdown-meta" : "0.0.2",
             "underscore"    : "1.4.4",
             "mkdirp"        : "0.3.5",
             "walkdir"       : "0.0.7"

@@ -8,6 +8,11 @@ module.exports = function(app) {
     function getManager() {
         return app.get('blogManager');
     }
+    function refreshBlogs(next) {
+        var BlogManager = require('../models/blogManager');
+        new BlogManager(app, next);
+    }
+
     /* get request */
     app.get('/backend', function(req, res) {
         var manager = getManager();
@@ -30,11 +35,13 @@ module.exports = function(app) {
     });
 
     /* post&ajax request */
-    app.post('/backend/refresh', function(req, res) {
-        //TODO refresh
+    app.get('/backend/refresh', function(req, res) {
+        refreshBlogs(function() {
+            res.send('ok');
+        });
     });
 
-    app.post('/backend/addpost', function(req, res) {
+    app.post('/backend/savepost', function(req, res) {
         var md = req.body.md;
         var metadata = markdown_meta.parse(md);
         var blog = new Blog(metadata);
@@ -43,7 +50,9 @@ module.exports = function(app) {
                 res.send(err);
                 return;
             }
-            res.send('ok');
+            refreshBlogs(function() {
+                res.send('ok');
+            });
         });
     });
 };

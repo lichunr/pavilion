@@ -1,21 +1,27 @@
 var db = require('../lib/db');
 var Globals = require('../lib/globals');
+var Utils = require('../lib/utils');
 var Blog = require('./blog');
 var markdown_meta = require('markdown-meta');
 var _ = require('underscore');
 
-var BlogManager = function (app) {
+var BlogManager = function (app, next) {
     this.tags = {};
     this.categories = {};
     this.blogs = [];
 
     var that = this;
     readBlogs(Globals.BLOG_FOLDER, Globals.MD_EXTENSION, function(blogs) {
-        that.blogs = blogs || [];
+        that.blogs = blogs;
         that.tags = collectTags(that.blogs);
         that.categories = collectCategories(that.blogs);
 
+        console.log('read blogs finished');
+
         app.set('blogManager', that);
+        if (next) {
+            next();
+        }
     });
 
     this.getBlog = function(url) {
@@ -30,7 +36,15 @@ function readBlogs(folder, extension, next) {
     db.readAll(folder, extension, function (data) {
         var blogs = [];
         for (var i in data) {
-            blogs.push(new Blog(data[i]));
+            var blog = new Blog(data[i]);
+            var path = Utils.getBlogFilepath(blog.metadata.dateTime, blog.metadata.seo);
+            
+            if (blog.metadata.path != path) {
+                console.log("blog:" + blog.metadata.path + " is not in the right directory, should be " + path);
+                continue;
+            }
+            
+            blogs.push(blog);
         }
         next(blogs);
     }, markdown_meta.parse);

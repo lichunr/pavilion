@@ -44,6 +44,7 @@ module.exports = function(app) {
     app.post('/backend/savepost', function(req, res) {
         var md = req.body.md;
         var metadata = markdown_meta.parse(md);
+        metadata.dateTime = new Date(metadata.dateTime);
         var blog = new Blog(metadata);
         blog.save(md, function(err) {
             if (err) {

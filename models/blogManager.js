@@ -34,6 +34,7 @@ var BlogManager = function (app, next) {
 
 function readBlogs(folder, extension, next) {
     db.readAll(folder, extension, function (data) {
+        //data is the metadatas for all the blogs
         var blogs = [];
         for (var i in data) {
             var blog = new Blog(data[i]);

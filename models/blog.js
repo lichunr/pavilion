@@ -5,6 +5,7 @@ var Globals = require('../lib/globals.js');
 
 var Blog = function(metadata) {
     this.metadata = metadata;
+    this.metadata.dateTime = new Date(this.metadata.dateTime);
     this.url = Utils.generateUrl(this.metadata.dateTime.getFullYear(), this.metadata.dateTime.getMonth() + 1, this.metadata.dateTime.getDate(), this.metadata.seo);
 
     this.get = function (next) {
